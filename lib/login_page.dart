@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'first_screen.dart';
+import 'ropa.dart';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 final TextEditingController _emailController = TextEditingController();
@@ -120,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
 } catch (e) {
   print(e);
 }
+_state();
   }
 
   _login() async{
@@ -149,7 +150,7 @@ _state();
       Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
-                  return FirstScreen();
+                  return RopaPage();
                 },
               ),
             );
@@ -169,7 +170,7 @@ _state();
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
-                  return FirstScreen();
+                  return RopaPage();
                 },
               ),
             );
