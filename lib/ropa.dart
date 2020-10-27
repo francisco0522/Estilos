@@ -4,8 +4,21 @@ import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'sign_in.dart';
 
+class RopaPage extends StatefulWidget {
+  @override
+  _RopaPage createState() => _RopaPage();
+}
 
-class RopaPage extends StatelessWidget {
+class _RopaPage extends State<RopaPage> {
+
+
+
+      @override
+  void initState() {
+    super.initState();
+    obtenerRopa();
+
+  }
 
  
   @override
@@ -26,7 +39,7 @@ class RopaPage extends StatelessWidget {
             return Center(
               child: Column(
                 children: [
-                  FlutterLogo(size: 150),
+                  FlutterLogo(size: 150),                  
                   Text(
                 'Nombre $index',
                  style: TextStyle(fontSize: 20.0),
@@ -75,4 +88,15 @@ class RopaPage extends StatelessWidget {
 
 
   }
+
+
+obtenerRopa(){                
+  firestoreInstance.collection("ropas").get().then((querySnapshot) {
+    querySnapshot.docs.forEach((result) {
+      print(result.data());
+    });
+  });
+  }
+
+
 }

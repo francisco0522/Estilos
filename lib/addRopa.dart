@@ -41,6 +41,8 @@ class _AddRopaPage extends State<AddRopaPage> {
   String errMessage = 'Error Uploading Image';
   String imagePath = "";
 
+  var retrievedName;  
+
   chooseImage() {
     setState(() {
       file = ImagePicker.pickImage(source: ImageSource.gallery);
@@ -69,6 +71,8 @@ class _AddRopaPage extends State<AddRopaPage> {
           )),
         ));
   }
+
+  
 
   widgetRopa() {
     return Container(
