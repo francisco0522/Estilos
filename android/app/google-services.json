@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "54670776652",
+    "firebase_url": "https://estilos-1db30.firebaseio.com",
+    "project_id": "estilos-1db30",
+    "storage_bucket": "estilos-1db30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:54670776652:android:a99fd36cef8cae2945d7e9",
+        "android_client_info": {
+          "package_name": "com.example.estilos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "54670776652-uji5jhifpmomc7n1id5vo98tdtoul2ui.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARyJszOt63e57hmSA93Be4mWDkFYFzFnc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "54670776652-uji5jhifpmomc7n1id5vo98tdtoul2ui.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
