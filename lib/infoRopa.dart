@@ -42,31 +42,47 @@ class _InfoRopaPage extends State<InfoRopaPage> {
 
   cardRopa() {
     return Container(
+      margin: const EdgeInsets.only(left: 20.0, right: 20.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(
-            widget.ropa.imagen,
+          Container(
+            margin: const EdgeInsets.only(bottom: 20.0),
+            height: 300,
+            width: MediaQuery.of(context).size.width,
+            child: Image.network(
+              widget.ropa.imagen,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FlutterLogo(size: 50),
+              RichText(
+                textAlign: TextAlign.start,
+                text: TextSpan(
+                  text: '\$' + widget.ropa.precio,
+                  style: TextStyle(color: Colors.black, fontSize: 25.0),
+                ),
+              ),
+            ],
           ),
           RichText(
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             text: TextSpan(
-              text: '' + widget.ropa.nombre,
-              style: TextStyle(color: Colors.black54, fontSize: 40.0),
+              text: '\n' + widget.ropa.nombre,
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30.0),
+            ),
+          ),
+          RichText(
+            textAlign: TextAlign.start,
+            text: TextSpan(
+              text: 'Talla: ' + widget.ropa.talla,
+              style: TextStyle(color: Colors.black, fontSize: 25.0),
               children: <TextSpan>[
-                TextSpan(
-                    text: '\n\$' + widget.ropa.precio,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30.0)),
-                TextSpan(
-                    text: '\n\n' + widget.ropa.descripcion,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 25.0)),
-                TextSpan(
-                    text: '\n\nTalla: ' + widget.ropa.talla,
-                    style: TextStyle(color: Colors.black, fontSize: 30.0)),
                 if (widget.ropa.genero == "Hombre")
                   TextSpan(
                       text: '\n' + widget.ropa.genero,
@@ -80,34 +96,43 @@ class _InfoRopaPage extends State<InfoRopaPage> {
               ],
             ),
           ),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: [
-              FlatButton(
-                textColor: const Color(0xFF00B6EE),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return AddEditRopaPage(
-                            function: "Editar", idRopa: widget.ropa.id);
-                      },
-                    ),
-                  );
-                },
-                child: const Text('Editar'),
-              ),
-              FlatButton(
-                textColor: const Color(0xFFEE0000),
-                onPressed: () {
-                  setState(() {
-                    _delete(widget.ropa.id);
-                  });
-                },
-                child: const Text('Eliminar'),
-              ),
-            ],
+          RichText(
+            textAlign: TextAlign.start,
+            text: TextSpan(
+              text: '\n' + widget.ropa.descripcion,
+              style: TextStyle(color: Colors.black54, fontSize: 20.0),
+            ),
           ),
+          Container(
+              margin: const EdgeInsets.only(top: 40.0),
+              child: ButtonBar(
+                alignment: MainAxisAlignment.center,
+                children: [
+                  FlatButton(
+                    textColor: const Color(0xFF00B6EE),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddEditRopaPage(
+                                function: "Editar", idRopa: widget.ropa.id);
+                          },
+                        ),
+                      );
+                    },
+                    child: const Text('Editar'),
+                  ),
+                  FlatButton(
+                    textColor: const Color(0xFFEE0000),
+                    onPressed: () {
+                      setState(() {
+                        _delete(widget.ropa.id);
+                      });
+                    },
+                    child: const Text('Eliminar'),
+                  ),
+                ],
+              )),
         ],
       ),
     );

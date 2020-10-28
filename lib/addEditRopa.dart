@@ -289,11 +289,11 @@ class _AddEditRopaPage extends State<AddEditRopaPage> {
           RaisedButton(
             color: Color.fromRGBO(20, 120, 200, 1),
             onPressed: () {
-              if(_nombreController.text != "" ||
-              _precioController.text != "" ||
-              dropdownValueTalla != "Talla" ||
-              dropdownValueGenero != "Género" ||
-              _tipoController.text != "" ||
+              if(_nombreController.text != "" &&
+              _precioController.text != "" &&
+              dropdownValueTalla != "Talla" &&
+              dropdownValueGenero != "Género" &&
+              _tipoController.text != "" &&
               _descripcionController.text != ""
               ){
               crearProducto(dropdownValueTalla, dropdownValueGenero);

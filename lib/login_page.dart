@@ -131,8 +131,10 @@ _state();
   );
 } on FirebaseAuthException catch (e) {
   if (e.code == 'user-not-found') {
+    _error("No se encontro el correo");
     print('No user found for that email.');
   } else if (e.code == 'wrong-password') {
+    _error("Contraseña incorrecta");
     print('Wrong password provided for that user.');
   }
 }
@@ -204,4 +206,36 @@ _state();
       ),
     );
   }
+
+
+  Future<void> _error(error) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(error),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(error),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+
 }
