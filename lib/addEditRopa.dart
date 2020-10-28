@@ -1,13 +1,14 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:estilos/ropa.dart';
+import 'package:estilos/ropaList.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart'; 
 
-class AddRopa {
+class AddEditRopa {
   final String nombre;
   final String talla;
   final int precio;
@@ -15,7 +16,7 @@ class AddRopa {
   final String tipo;
   final String descripcion;
 
-  AddRopa(this.nombre, this.talla, this.precio, this.genero, this.tipo,
+  AddEditRopa(this.nombre, this.talla, this.precio, this.genero, this.tipo,
       this.descripcion);
 }
 
@@ -28,18 +29,27 @@ final TextEditingController _descripcionController = TextEditingController();
 String dropdownValueTalla = 'Talla';
 String dropdownValueGenero = 'Género';
 
-class AddRopaPage extends StatefulWidget {
+class AddEditRopaPage extends StatefulWidget {
+
+   AddEditRopaPage({Key key, this.function, this.idRopa})
+      : super(key: key);
+
+  String function;
+  String idRopa;
+
+
   @override
-  _AddRopaPage createState() => _AddRopaPage();
+  _AddEditRopaPage createState() => _AddEditRopaPage();
 }
 
-class _AddRopaPage extends State<AddRopaPage> {
+class _AddEditRopaPage extends State<AddEditRopaPage> {
   Future<File> file;
   String status = '';
   String base64Image;
   File tmpFile;
   String errMessage = 'Error Uploading Image';
   String imagePath = "";
+
 
   var retrievedName;  
 
@@ -48,15 +58,15 @@ class _AddRopaPage extends State<AddRopaPage> {
       file = ImagePicker.pickImage(source: ImageSource.gallery);
     });
   }
+
+
   
 
   @override
   Widget build(BuildContext context) {
-    final title = 'Agregar Ropa';
+    final title = widget.function;
 
-    return MaterialApp(
-        title: title,
-        home: Scaffold(
+    return  Scaffold(
           appBar: AppBar(
             title: Text(title),
           ),
@@ -69,7 +79,7 @@ class _AddRopaPage extends State<AddRopaPage> {
               ],
             ),
           )),
-        ));
+        );
   }
 
   
@@ -78,12 +88,14 @@ class _AddRopaPage extends State<AddRopaPage> {
     return Container(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0),
         child: Column(children: <Widget>[
+          if(widget.function == "Editar")
+          Text("Agrege los la información en los campos que desea modificar solamente"),
           Container(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: TextFormField(
                 controller: _nombreController,
                 decoration: const InputDecoration(
-                  hintText: 'Nombre del producto',
+                  hintText: "Nombre del producto",
                   border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: Colors.white,
@@ -273,6 +285,7 @@ class _AddRopaPage extends State<AddRopaPage> {
                   fillColor: Colors.white,
                 ),
               )),
+              if(widget.function == "Agregar")
           RaisedButton(
             color: Color.fromRGBO(20, 120, 200, 1),
             onPressed: () {
@@ -297,22 +310,112 @@ class _AddRopaPage extends State<AddRopaPage> {
               ),
             ),
           ),
+          if(widget.function == "Editar")
+          RaisedButton(
+            color: Color.fromRGBO(20, 120, 200, 1),
+            onPressed: () {
+
+              editarProducto(dropdownValueTalla, dropdownValueGenero, widget.idRopa);
+
+            },
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: "Editar Producto",
+                style: TextStyle(
+                    color: Color.fromRGBO(255, 255, 255, 1), fontSize: 18),
+              ),
+            ),
+          ),
         ]));
   }
 
-  void crearProducto(dropdownValueTalla, dropdownValueGenero) {
-    firestoreInstance.collection("ropas").add({
+  void crearProducto(dropdownValueTalla, dropdownValueGenero) async {
+    
+
+    StorageReference storageReference = FirebaseStorage.instance    
+       .ref()    
+       .child('ropa/${(tmpFile.path)}}');    
+   StorageUploadTask uploadTask = storageReference.putFile(tmpFile);    
+   await uploadTask.onComplete;    
+   print('File Uploaded');    
+   storageReference.getDownloadURL().then((fileURL) {   
+
+     firestoreInstance.collection("ropas").add({
       "nombre": _nombreController.text,
       "precio": _precioController.text,
       "talla": dropdownValueTalla.toString(),
       "tipo": _tipoController.text,
       "genero" : dropdownValueGenero.toString(),
       "descripcion" : _descripcionController.text,
+      "imagen": fileURL,
 
     }).then((value) {
       _ropaCreada();
-    });
+    }); 
+    
+  
+   });    
+
+    
   }
+
+    void editarProducto(dropdownValueTalla, dropdownValueGenero, id) {
+    if(_nombreController.text != ""){
+    firestoreInstance
+        .collection("ropas")
+        .doc(id)
+        .update({"nombre": _nombreController.text}).then((_) {
+      _ropaEditada();
+    });
+    }
+    if(_precioController.text != ""){
+    firestoreInstance
+        .collection("ropas")
+        .doc(id)
+        .update({"precio": _precioController.text}).then((_) {
+      _ropaEditada();
+    });
+    }
+  
+  if(_tipoController.text != ""){
+    firestoreInstance
+        .collection("ropas")
+        .doc(id)
+        .update({"tipo": _tipoController.text}).then((_) {
+      _ropaEditada();
+    });
+    }
+
+    if(_descripcionController.text != ""){
+    firestoreInstance
+        .collection("ropas")
+        .doc(id)
+        .update({"descripcion": _descripcionController.text}).then((_) {
+      _ropaEditada();
+    });
+    }
+
+     if(dropdownValueTalla != "Talla"){
+    firestoreInstance
+        .collection("ropas")
+        .doc(id)
+        .update({"talla": dropdownValueTalla}).then((_) {
+      _ropaEditada();
+    });
+    }
+
+     if(dropdownValueGenero != "Género"){
+    firestoreInstance
+        .collection("ropas")
+        .doc(id)
+        .update({"genero": dropdownValueGenero}).then((_) {
+      _ropaEditada();
+    });
+    }
+
+
+    }
 
   Future<void> _ropaCreada() async {
     return showDialog<void>(
@@ -335,7 +438,40 @@ class _AddRopaPage extends State<AddRopaPage> {
                 Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
-                  return RopaPage();
+                  return RopaListPage();
+                },
+              ),
+            );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _ropaEditada() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Se edito correctamente la ropa'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Se edito ' + _nombreController.text),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return RopaListPage();
                 },
               ),
             );
